@@ -3,10 +3,6 @@ library(ggplot2)
 
 # set working directory
 win_dir <- 'C:\\Users\\tverdonckt\\OneDrive - ITG\\Desktop\\DenMark_VLAIO\\Data\\Fragment Analyzer\\24-03-01_RUN 189\\Library_BCR_11-38-53'
-#win_dir <- 'C:\\Users\\tverdonckt\\OneDrive - ITG\\Desktop\\DenMark_VLAIO\\Data\\Fragment Analyzer\\24-03-01_RUN 189\\Library TCR 12-45-26'
-#win_dir <- 'C:\\Users\\tverdonckt\\OneDrive - ITG\\Desktop\\DenMark_VLAIO\\Data\\Fragment Analyzer\\24-03-01_RUN 189\\PCR1 BCR 13-52-00'
-#win_dir <- "C:\\Users\\tverdonckt\\OneDrive - ITG\\Desktop\\DenMark_VLAIO\\Data\\Fragment Analyzer\\24-03-01_RUN 189\\PCR1 TCR 14-58-32"
-#win_dir <- 'C:\\Users\\tverdonckt\\OneDrive - ITG\\Desktop\\DenMark_VLAIO\\Data\\Fragment Analyzer\\23-12-19 - RUN 147 12-56-21'
 
 win_lin <- gsub("\\\\", "/", win_dir)
 setwd(win_lin)
