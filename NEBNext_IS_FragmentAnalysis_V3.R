@@ -1,7 +1,3 @@
-# CHANGELOG:
-# v3.0 --> ADDED AVERAGE SMEAR SIZE
-
-
 # Load necessary libraries
 library(ggplot2)
 
