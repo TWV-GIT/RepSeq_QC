@@ -1,6 +1,6 @@
 # Versioning, libraries, and instructions---------------------------------------
 
-script_version = '1.2'
+script_version = '1.3'
 # 1.1 <- added support for targets
 # 1.2 <- added standard curve, absolute quantification and other improvements
 
@@ -13,9 +13,21 @@ library(pracma)
 # the library wells need to be named according to the picomolarity (e.g. 100 pM = sample name '100')
 
 # Set parameters----------------------------------------------------------------
-win_dir <- 'C:\\Users\\tverdonckt\\OneDrive - ITG\\Desktop\\DenMark_VLAIO\\Data\\qPCR\\J9\\24-06-28 - 205_208 - libs'
-Amp_results <- "208-205 -  Quantification Amplification Results_SYBR.csv"
-Quant_summary <- "208-205 -  Quantification Summary_0.csv"
+Amp_results <- rstudioapi::selectFile(
+  caption = "Select the Quantification Amplification Results",
+  filter = "CSV Files (*.csv)",
+  existing = TRUE)
+
+Quant_summary <- rstudioapi::selectFile(
+  caption = "Select the Quantification Summary",
+  filter = "CSV Files (*.csv)",
+  existing = TRUE)
+
+output_dir <- rstudioapi::selectDirectory(
+  caption = "Select output directory",
+  label = "Select",
+  path = getwd())
+
 
 Cycle_cutoff <- 30
 lower_Cycle_cutoff <- 0
@@ -48,16 +60,16 @@ highlightnames <- c('A')
 
 # define functions -------------------------------------------------------------
 save_tables <- function(){
-  write.table(average_sd, file = paste0(format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), "_Ct_values_", Abs_threshold, "_treshold.tsv"))
-  write.table(df_summary, file = paste0(format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), "_Library-concentrations_", Abs_threshold, "_treshold.tsv"))
+  write.table(average_sd, file = paste0(output_dir, '/', format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), "_Ct_values_", Abs_threshold, "_treshold.tsv"))
+  write.table(df_summary, file = paste0(output_dir, '/',format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), "_Library-concentrations_", Abs_threshold, "_treshold.tsv"))
   
 }
 save_plots <- function(){
-  pdf(file = paste0(format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), "_library_quantification_plots.PDF"), width = plot_sizes[1], height = plot_sizes[2])
+  pdf(file = paste0(output_dir, '/',format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), "_library_quantification_plots.PDF"), width = plot_sizes[1], height = plot_sizes[2])
   plot(1, type="n", xlab="", ylab="", xlim=c(0,10), ylim=c(0,10), axes=FALSE) # Create an empty plot with no axes
   lines <- c(paste0("PDF generated with the NEBNext_IS_qPCR_Absolute_Quantification_", script_version, ".R script."),
-             paste0("Amplification input file: ", Amp_results),
-             paste0("Quantification summary file: ", Quant_summary),
+             paste0("Amplification input file: ", sub("^.*/", "", Amp_results)),
+             paste0("Quantification summary file: ", sub("^.*/", "", Quant_summary)),
              paste0("The following samples were filtered from plotting: ", paste(filternames, collapse = ", ")),
              paste0("The following wells were filtered from plotting and calculations: ", paste(Well_filter, collapse = ", ")),
              paste0("Threshold value: ", Abs_threshold),
@@ -71,8 +83,6 @@ save_plots <- function(){
   print(con)
   dev.off()}
 # Load datasets ----------------------------------------------------------------
-win_lin <- gsub("\\\\", "/", win_dir)
-setwd(win_lin)
 RFU <- read.csv(Amp_results, header = TRUE, check.names = FALSE)
 RFU <- subset(RFU, select = -1)
 RFU$Cycle <- as.numeric(rownames(RFU))
