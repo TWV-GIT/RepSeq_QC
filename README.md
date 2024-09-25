@@ -17,6 +17,9 @@ Once the libraries have been prepped, their size distribution must be assessed t
 ## 3. qPCR library quantification
 The last step of libraryprep is to accurately quantify the libraries. This is acchieved through qPCR with standards.
 
-- **Input data**: Gene expression result and Cq result files (.csv format) from CFX96 Real-Time System.
+- **Input data**: Gene expression result and Cq result files (.csv format) from CFX96 Real-Time System. The standard names should correspond to the quantity, the well target should be 'ladder'.
+  
+![My image](./example_data/Setup_IS.bmp)
+
 - **Parameters**: Wells to exclude, dilution factor, Reference sizes of BCR/TCR/IGH peaks.
 - **Outputs**: PDF file with relevant metadata, amplification curves, and absolute sample concentrations with SD.
