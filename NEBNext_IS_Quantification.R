@@ -1,16 +1,15 @@
 # Versioning, libraries, and instructions---------------------------------------
 
 script_version = '1.3'
-# 1.1 <- added support for targets
-# 1.2 <- added standard curve, absolute quantification and other improvements
 
 library(reshape2)
 library(dplyr)
 library(ggplot2)
 library(pracma)
 
-# instructions:
-# the library wells need to be named according to the picomolarity (e.g. 100 pM = sample name '100')
+# Instructions:
+# the standards wells need to be named according to the quantity (e.g. 100 pM = sample name '100')
+# the standards target needs to be set as 'ladder'
 
 # Set parameters----------------------------------------------------------------
 Amp_results <- rstudioapi::selectFile(
@@ -43,8 +42,9 @@ plot_sizes <- c(8,6) # width, height
 
 # samples that should not be plotted
 filternames <- c('NTC', '')
-# Name of standard samples (must be equal to standard concentration)
+# Name of standard samples (must be equal to standard amount)
 laddernames <- c('100', '10', '1', '0.1')
+ladderunit <- 'nM'
 ladder_amplicon_size <- 399
 IGH_amplicon_size <- 700
 BCR_amplicon_size <- 635
@@ -221,7 +221,7 @@ reg <- ggplot(data_ladder, aes(x=Sample, y=Ct)) +
   labs(title="Linear regression of standards",
        subtitle = paste("R-squared: ", round(r_squared, 3), "; Slope: ", round(slope, 2),
                         "; Efficiency: ", round(efficiency, 3)*100,"%"),
-       x="Concentration (pM)", y="Ct-value") +
+       x=paste0("Concentration (", ladderunit, ")"), y="Ct-value") +
   geom_point(data = data_filtered_meta %>% filter(Target != "ladder"), 
              aes(x=avg_ct_fit, y=Avg_Ct, color=Target), position = "identity")
 print(reg)
@@ -255,8 +255,8 @@ con <- ggplot(df_summary, aes(x = Sample, y = mean_concentration, fill = Target)
   labs(title = 'Absolute concentration of libraries ± SE',
        subtitle = paste0('Sample dilution = ', sample_dilution, "X;\nLibrary amplicon size of IGH / BCR / TCR: ", 
                          IGH_amplicon_size, ' / ', BCR_amplicon_size, ' / ', TCR_amplicon_size,
-                         '\nStandard amplicon size: 399'),
-       x = "Sample", y = "Concentration (nM)") +
+                         '\nStandard amplicon size: ', ladder_amplicon_size),
+       x = "Sample", y = paste0("Concentration (", ladderunit, ")")) +
   theme_minimal()
 
 print(con)
