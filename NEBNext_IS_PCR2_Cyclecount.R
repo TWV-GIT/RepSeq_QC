@@ -12,6 +12,7 @@ library(gridExtra)
 Curve_top <- 1
 Cycle_cutoff <- 27
 lower_Cycle_cutoff <- 0
+upper_Cycle_cutoff <- 5
 Sample_detect_threshold <- 500
 wavelength <- 'SYBR' # e.g. '483-533' or '465-510'
 Ct_factor <- 0.666 #fraction of plateau fluorescence used for Ct threshold
@@ -24,7 +25,7 @@ plot_title <- "NEBNext IS library quantification plot"
 
 filternames <- c('100', '50', '12.5', '25', '3.13', '6.25', '1.56','NTC') # samples that should not be plotted (e.g. ladders)
 
-highlightnames <- c('A','B') # Samples to plot uniquely
+highlightnames <- c('letter01','letter12') # Samples to plot uniquely
 
 #save_tables()
 #save_plots()
@@ -78,18 +79,16 @@ if (rstudioapi::isAvailable()) {
   cat("Please enter the path to the output directory: ")
   output_dir <- readline()
 }
-
-RFU <- subset(RFU, select = -1)
+RFU <- RFU[, !(is.na(names(RFU)) | names(RFU) == "")]
 RFU$Cycle <- as.numeric(rownames(RFU))
 RFU_long <- melt(RFU, id.vars = "Cycle", variable.name = "Well", value.name = "fluorescence")
 RFU_long$Well <- sprintf("%s%02d", substr(RFU_long$Well, 1, 1), as.integer(substr(RFU_long$Well, 2, nchar(as.character(RFU_long$Well)))))
-
-Cq <- subset(Cq, select = -1)
+Cq <- Cq[, !(is.na(names(Cq)) | names(Cq) == "")]
 merged_table <- merge(RFU_long, Cq[,c("Well", "Sample", "Target")], by = "Well") # Include "Target" column
 merged_table <- merged_table[order(as.numeric(merged_table$Sample), merged_table$Cycle), ]
 
 # Calculations -----------------------------------------------------------------
-baseline <- c(lower_Cycle_cutoff: 3)
+baseline <- c(lower_Cycle_cutoff: upper_Cycle_cutoff)
 #Filter out wells where the maximum fluorescence does not exceed the threshold
 data_filtered <- merged_table %>%
   group_by(Sample, Target) %>% # Include "Target" column

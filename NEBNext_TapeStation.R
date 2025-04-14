@@ -31,7 +31,7 @@ output_dir <- rstudioapi::selectDirectory(
   label = "Select",
   path = getwd())
 
-standard_sample_order <- TRUE
+standard_sample_order <- FALSE
 exclude_wells <- c('')
 dilution <- 10
 

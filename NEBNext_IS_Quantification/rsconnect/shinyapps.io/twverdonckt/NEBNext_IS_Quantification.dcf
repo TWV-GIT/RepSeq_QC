@@ -1,0 +1,12 @@
+name: NEBNext_IS_Quantification
+title: NEBNext_IS_Quantification
+username: twverdonckt
+account: twverdonckt
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14517101
+bundleId: 10112379
+url: https://twverdonckt.shinyapps.io/NEBNext_IS_Quantification/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

@@ -84,7 +84,7 @@ save_plots <- function(){
   dev.off()}
 # Load datasets ----------------------------------------------------------------
 RFU <- read.csv(Amp_results, header = TRUE, check.names = FALSE)
-RFU <- subset(RFU, select = -1)
+RFU <- RFU[, names(RFU) != ""]
 RFU$Cycle <- as.numeric(rownames(RFU))
 RFU_long <- melt(RFU, id.vars = "Cycle", variable.name = "Well", value.name = "fluorescence")
 RFU_long$Well <- sprintf("%s%02d", substr(RFU_long$Well, 1, 1), as.integer(substr(RFU_long$Well, 2, nchar(as.character(RFU_long$Well)))))
